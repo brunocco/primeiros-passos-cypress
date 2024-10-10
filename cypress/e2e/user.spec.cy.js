@@ -1,18 +1,25 @@
 import userData from '../fixtures/users/userData.json'
+import LoginPage from '../pages/loginPage.js';
+import DashboardPage from '../pages/dashboardPages.js';
+import MenuPage from '../pages/menuPage.js';
+
+const loginPage = new LoginPage()
+const dashboardPage = new DashboardPage()
+const menuPage = new MenuPage()
+
 describe('Orange HRM test', () => {
 
   const selectorsList = {
-    usernameField: "[name='username']",
-    passwordField: "[name='password']",
-    loginButton: "[type='submit']",
-    sectionTitleTopBar: ".oxd-topbar-header-breadcrumb-module",
-    wrongCredentialAlert: "[role='alert']",
-    dashboardGrid: ".orangehrm-dashboard-grid",
-    myInfoButton: "[href='/web/index.php/pim/viewMyDetails']",
+    
+    
+    
     firstNameField: "[name='firstName']",
     lastNameField: "[name='lastName']",
     genericField: ".oxd-input--active",
     dateField: "[placeholder='yyyy-dd-mm']",
+    genericCombox: ".oxd-select-text--active",
+    secondItemCombobox: ".oxd-select-dropdown > :nth-child(6) > span",
+    thirdItemCombobox: ".oxd-select-dropdown > :nth-child(3)",
     dateCloseButton: ".--close",
     submitButton: "[type='submit']",
   }
@@ -20,13 +27,16 @@ describe('Orange HRM test', () => {
  
 
   it.only('User Info Update successfully', () => {
-      cy.visit('/auth/login')
-      cy.get(selectorsList.usernameField).type(userData.userSucess.username)
-      cy.get(selectorsList.passwordField).type(userData.userSucess.password)
-      cy.get(selectorsList.loginButton).click()
-      cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-      cy.get(selectorsList.dashboardGrid)
-      cy.get(selectorsList.myInfoButton).click()
+      loginPage.accesLoginPage()
+      loginPage.loginWithUser(userData.userSucess.username,userData.userSucess.password)
+      
+      
+      dashboardPage.checkDashboardPage()
+
+      menuPage.accessMyMinfo()
+      
+      
+    
      
       cy.get(selectorsList.firstNameField).clear().type('FirstNameTest')
       cy.get(selectorsList.lastNameField).clear().type('LastNameTest')
@@ -38,10 +48,12 @@ describe('Orange HRM test', () => {
       cy.get(selectorsList.submitButton).eq(0).click()
       cy.get('body').should('contain', 'Successfully Updated')
       cy.get('.oxd-toast-close')
-      //cy.get(selectorsList.genericField).eq(8).type('NikenameTest')
-      //License Expiry Date = 0
-      //dat of bith = 2
-      //testfild = 8
+
+      cy.get(selectorsList.genericCombox).eq(0).click()
+      cy.get(selectorsList.secondItemCombobox).click()
+
+      cy.get(selectorsList.genericCombox).eq(1).click()
+      cy.get(selectorsList.thirdItemCombobox).click() 
   });
   it('login fail', () => {
       cy.visit('/auth/login')

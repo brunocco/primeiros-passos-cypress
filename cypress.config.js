@@ -5,7 +5,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    chromeWebSecurity: false, // Adicione esta linha aqui
+    
 
     baseUrl: 'https://opensource-demo.orangehrmlive.com/web/index.php',
   },
